@@ -32,7 +32,7 @@
 <img width="1128" height="656" alt="image" src="https://github.com/user-attachments/assets/9bb4c76a-9e98-48f6-b678-7737fd5e60b8" />
 <img width="1130" height="661" alt="image" src="https://github.com/user-attachments/assets/1b8887ce-1b7d-4f00-9897-74f0ba997c24" />
 
-### Tracing DNS dengan Wireshark
+## Tracing DNS dengan Wireshark
 
 7. Catatan DNS pada host dikosongkan menggunakan `ipconfig /flushdns`, dan cache browser dibersihkan terlebih dahulu sebelum pengambilan paket dimulai.
 
@@ -40,3 +40,13 @@
 <img width="1646" height="512" alt="image" src="https://github.com/user-attachments/assets/668cad48-7d12-410c-80bc-0892945db83c" />
 
 9. Pengambilan paket dimulai, kemudian halaman `http://www.ietf.org` diakses melalui browser, dan pengambilan paket dihentikan setelah halaman selesai dimuat.
+
+**Pertanyaan & Analisis:**
+
+1. Pesan permintaan DNS dan balasannya dikirimkan melalui protokol UDP.
+2. Port tujuan pada pesan permintaan DNS adalah 53, dan port sumber pada pesan balasannya adalah 53.
+3. Alamat IP tujuan pada pesan permintaan DNS adalah 192.168.0.1, dibandingkan dengan alamat IP server DNS lokal hasil `ipconfig` yaitu 192.168.0.1, kedua alamat IP tersebut sama.
+4. Jenis (*type*) pesan permintaan DNS adalah A, dan pesan tersebut tidak mengandung jawaban.
+5. Pesan balasan DNS berisi beberapa jawaban, dengan isi berupa rantai CNAME dari functional.events.data.microsoft.com menuju global.asimov.events.data.trafficmanager.net, hingga akhirnya ke onedscolprdeus05..
+6. Paket TCP SYN yang dikirimkan setelahnya menuju alamat IP 13.89.179.9, yang sesuai dengan alamat IP pada pesan balasan DNS.
+7. Untuk gambar-gambar lain pada halaman `www.ietf.org`, host tidak perlu mengirimkan pesan permintaan DNS baru, karena hasil resolusi nama domain sebelumnya sudah tersimpan di cache DNS lokal selama TTL-nya belum habis.
